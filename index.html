@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<!-- alias dbf="cd '/Users/parinkat/Parinkats DBF/0 - ParinDBFResources/glossary'; Python -m SimpleHTTPServer 9999 &; open http://localhost:9999/" -->
+
+<head>
+    <title>DBF SPIRITUAL GLOSSARY</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <script src="./angular.min.js"></script>
+    <style>
+    </style>
+</head>
+
+<body class="alert-dark">
+    <div ng-app="myApp" ng-controller="myController">
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <img style="width: 100px;height: 45px;" src="logo-small.png">
+                    </div>
+                    <!-- <div class="col">
+                        <img style="width: 200px;height: 45px;" src="banner.jpeg">
+                    </div> -->
+                    <div class="col">
+                        <div class="navbar-brand">DBF Spiritual Glossary</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <br>
+        <div class="container">
+            <div class="col-6">
+                <table class="table table-responsive table-hover alert-light">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>
+                                <!-- Word -->
+                                <input type="text" ng-model="search" placeholder="search" autofocus />
+                            </th>
+                            <th>Meaning
+                            </th>
+                        </tr>
+                    </thead>
+                    <!--TABLE ROWS WITH A FILTER-->
+                    <tbody>
+                        <tr ng-repeat="word in words | filter : search">
+                            <td>{{word.id}}</td>
+                            <td>
+                                <b>
+                                    {{word.word}}
+                                </b>
+                            </td>
+                            <td>
+                                {{word.meaning}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+angular.module("myApp", [])
+    .controller('myController', ['$scope', '$http', function($scope, $http) {
+
+        var request = {
+            method: 'get',
+            url: './glossary.json',
+            dataType: 'json',
+            contentType: "application/json"
+        };
+
+        $scope.words = {};
+
+        $http(request)
+            .success(function(jsonData) {
+                $scope.words = transform(jsonData);
+            })
+            .error(function() {
+                $scope.words = [];
+            });
+
+        function transform(wordsObject) {
+            let words = [];
+            let id = 1;
+            for (let word in wordsObject) {
+                words.push({ id: id++, word: word, meaning: wordsObject[word] });
+            }
+            return words;
+        }
+    }]);
+</script>
+
+</html>
