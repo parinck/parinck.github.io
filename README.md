@@ -1,6 +1,4 @@
-# [https://parinck.github.io](https://parinck.github.io/)
-
-Parin's side projects.
+# [Parin's side projects](https://parinck.github.io/)
 
 ## 1. DBF Spiritual Glossary Project
 
