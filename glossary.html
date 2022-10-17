@@ -67,8 +67,8 @@
 </body>
 <script>
 angular.module("myApp", [])
-    .controller('myController', ['$scope', '$http', function($scope, $http) {
-
+    .controller('myController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+        $scope.search = $location.search().search;
         var request = {
             method: 'get',
             url: './glossary.json',
