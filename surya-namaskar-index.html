@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Practice Surya Namaskar (Sun Salutation) with guided 30-second timers for each pose. Features beautiful SVG animations and audio cues.">
+    <title>Surya Namaskar - Sun Salutation Practice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="surya-namaskar-styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Animated Background -->
+        <div class="background-animation">
+            <div class="sun-rays"></div>
+            <div class="floating-particles"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="lotus-icon" viewBox="0 0 60 60" width="40" height="40">
+                        <defs>
+                            <linearGradient id="lotusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FF6B6B" />
+                                <stop offset="100%" style="stop-color:#FFE66D" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M30 5 Q35 20 30 30 Q25 20 30 5" fill="url(#lotusGradient)" opacity="0.9" />
+                        <path d="M30 5 Q45 15 40 30 Q35 20 30 5" fill="url(#lotusGradient)" opacity="0.8" />
+                        <path d="M30 5 Q15 15 20 30 Q25 20 30 5" fill="url(#lotusGradient)" opacity="0.8" />
+                        <path d="M30 30 Q40 35 45 50 Q30 45 30 30" fill="url(#lotusGradient)" opacity="0.7" />
+                        <path d="M30 30 Q20 35 15 50 Q30 45 30 30" fill="url(#lotusGradient)" opacity="0.7" />
+                        <ellipse cx="30" cy="52" rx="12" ry="4" fill="url(#lotusGradient)" opacity="0.5" />
+                    </svg>
+                    <h1>Surya Namaskar</h1>
+                </div>
+                <button id="settings-btn" class="settings-btn" aria-label="Settings">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                    </svg>
+                </button>
+            </div>
+            <p class="subtitle">Sun Salutation • 12 Sacred Poses</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Start Screen -->
+            <div id="start-screen" class="screen active">
+                <div class="welcome-card glass-card">
+                    <div class="welcome-icon">
+                        <svg viewBox="0 0 120 120" width="120" height="120">
+                            <defs>
+                                <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#FFD93D" />
+                                    <stop offset="50%" style="stop-color:#FF8C00" />
+                                    <stop offset="100%" style="stop-color:#FF6B6B" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="30" fill="url(#sunGradient)" class="sun-pulse" />
+                            <g class="sun-rays-animated">
+                                <line x1="60" y1="15" x2="60" y2="5" stroke="url(#sunGradient)" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <line x1="60" y1="115" x2="60" y2="105" stroke="url(#sunGradient)" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <line x1="15" y1="60" x2="5" y2="60" stroke="url(#sunGradient)" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <line x1="115" y1="60" x2="105" y2="60" stroke="url(#sunGradient)" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <line x1="28" y1="28" x2="21" y2="21" stroke="url(#sunGradient)" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <line x1="92" y1="28" x2="99" y2="21" stroke="url(#sunGradient)" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <line x1="28" y1="92" x2="21" y2="99" stroke="url(#sunGradient)" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <line x1="92" y1="92" x2="99" y2="99" stroke="url(#sunGradient)" stroke-width="3"
+                                    stroke-linecap="round" />
+                            </g>
+                        </svg>
+                    </div>
+                    <h2>Welcome to Your Practice</h2>
+                    <p>Begin your journey with the ancient Sun Salutation sequence. Tap the settings icon to adjust pose
+                        duration.</p>
+
+                    <div class="pose-preview-grid">
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                        <span class="preview-dot"></span>
+                    </div>
+                    <button id="start-btn" class="primary-btn">
+                        <span>Begin Practice</span>
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Practice Screen -->
+            <div id="practice-screen" class="screen">
+                <div class="practice-container">
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <div class="progress-dots" id="progress-dots"></div>
+                    </div>
+
+                    <!-- Pose Display -->
+                    <div class="pose-card glass-card">
+                        <div class="pose-header">
+                            <span id="pose-number" class="pose-number">1</span>
+                            <div class="pose-info">
+                                <h2 id="pose-name" class="pose-name">Pranamasana</h2>
+                                <p id="pose-subtitle" class="pose-subtitle">Prayer Pose</p>
+                            </div>
+                            <div id="breathing-indicator" class="breathing-indicator inhale">
+                                <span class="breath-text">INHALE</span>
+                                <div class="breath-animation"></div>
+                            </div>
+                        </div>
+
+                        <!-- SVG Pose Animation -->
+                        <div class="pose-animation-container">
+                            <div id="pose-svg" class="pose-svg"></div>
+                        </div>
+
+                        <!-- Timer -->
+                        <div class="timer-container">
+                            <svg class="timer-ring" viewBox="0 0 120 120">
+                                <circle class="timer-bg" cx="60" cy="60" r="54" />
+                                <circle id="timer-progress" class="timer-progress" cx="60" cy="60" r="54" />
+                            </svg>
+                            <div class="timer-display">
+                                <span id="timer-seconds" class="timer-seconds">30</span>
+                                <span class="timer-label">seconds</span>
+                            </div>
+                        </div>
+
+                        <!-- Pose Instructions -->
+                        <div class="pose-instructions">
+                            <p id="pose-description" class="description-text"></p>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="controls">
+                        <button id="pause-btn" class="control-btn">
+                            <svg id="pause-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                                <rect x="6" y="4" width="4" height="16" />
+                                <rect x="14" y="4" width="4" height="16" />
+                            </svg>
+                            <svg id="play-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor"
+                                style="display: none;">
+                                <polygon points="5 3 19 12 5 21 5 3" />
+                            </svg>
+                        </button>
+                        <button id="skip-btn" class="control-btn secondary">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <polygon points="5 4 15 12 5 20 5 4" />
+                                <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                        </button>
+                        <button id="restart-btn" class="control-btn secondary">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="1 4 1 10 7 10" />
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Screen -->
+            <div id="complete-screen" class="screen">
+                <div class="completion-card glass-card">
+                    <div class="celebration-icon">
+                        <svg viewBox="0 0 120 120" width="120" height="120">
+                            <defs>
+                                <linearGradient id="celebrateGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#6DD5FA" />
+                                    <stop offset="50%" style="stop-color:#FF6B6B" />
+                                    <stop offset="100%" style="stop-color:#FFE66D" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="url(#celebrateGradient)" stroke-width="4"
+                                class="celebrate-ring" />
+                            <path d="M40 60 L55 75 L85 45" stroke="url(#celebrateGradient)" stroke-width="6" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round" class="checkmark" />
+                        </svg>
+                    </div>
+                    <h2>Namaste! 🙏</h2>
+                    <p>You have completed one full round of Surya Namaskar. Your body and mind thank you for this sacred
+                        practice.</p>
+                    <div class="completion-stats">
+                        <div class="stat">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">Poses</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">6</span>
+                            <span class="stat-label">Minutes</span>
+                        </div>
+                    </div>
+                    <button id="restart-practice-btn" class="primary-btn">
+                        <span>Practice Again</span>
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="1 4 1 10 7 10" />
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Audio Elements -->
+        <div id="audio-container" style="display: none;"></div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal-overlay">
+            <div class="modal-content glass-card">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button id="close-settings" class="close-btn" aria-label="Close">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-item">
+                        <label>Time per pose</label>
+                        <div class="time-selector">
+                            <button type="button" class="time-btn minus" id="time-decrease">−</button>
+                            <div class="time-display">
+                                <span id="time-value">15</span>
+                                <span class="time-unit">sec</span>
+                            </div>
+                            <button type="button" class="time-btn plus" id="time-increase">+</button>
+                        </div>
+                        <div class="time-presets">
+                            <button type="button" class="preset-btn" data-time="10">10s</button>
+                            <button type="button" class="preset-btn active" data-time="15">15s</button>
+                            <button type="button" class="preset-btn" data-time="30">30s</button>
+                            <button type="button" class="preset-btn" data-time="60">60s</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="save-settings" class="primary-btn">
+                        <span>Save Settings</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="surya-namaskar-poses.js"></script>
+    <script src="surya-namaskar-app.js"></script>
+</body>
+
+</html>
