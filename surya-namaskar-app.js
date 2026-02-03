@@ -7,12 +7,48 @@ class SuryaNamaskarApp {
         this.timerInterval = null;
         this.isPaused = false;
         this.audioContext = null;
+        this.imageCache = new Map(); // Cache for preloaded images
 
         this.initElements();
         this.loadPreferences(); // Load saved preferences from localStorage
         this.initAudio();
         this.bindEvents();
         this.createProgressDots();
+        this.preloadImages(); // Preload all pose images for smooth transitions
+    }
+
+    /**
+     * Preload all pose images into memory for instant display during practice.
+     * Images are stored in a Map cache for quick retrieval.
+     */
+    preloadImages() {
+        POSES.forEach(pose => {
+            const img = new Image();
+            img.src = pose.image;
+            img.onload = () => {
+                console.log(`✓ Cached: ${pose.name}`);
+            };
+            img.onerror = () => {
+                console.warn(`✗ Failed to cache: ${pose.name}`);
+            };
+            this.imageCache.set(pose.image, img);
+        });
+    }
+
+    /**
+     * Get a cached image element or create a new one if not cached.
+     * @param {string} imagePath - Path to the image
+     * @returns {HTMLImageElement} - The cached or new image element
+     */
+    getCachedImage(imagePath) {
+        if (this.imageCache.has(imagePath)) {
+            // Return a clone of the cached image to avoid DOM conflicts
+            return this.imageCache.get(imagePath).cloneNode(true);
+        }
+        // Fallback: create new image if not in cache
+        const img = new Image();
+        img.src = imagePath;
+        return img;
     }
 
     initElements() {
@@ -238,8 +274,12 @@ class SuryaNamaskarApp {
         this.poseSubtitle.textContent = pose.subtitle;
         this.poseDescription.textContent = pose.description;
 
-        // Use image instead of SVG
-        this.poseSvg.innerHTML = `<img src="${pose.image}" alt="${pose.name}" class="pose-image" />`;
+        // Use cached image for instant display
+        const cachedImg = this.getCachedImage(pose.image);
+        cachedImg.alt = pose.name;
+        cachedImg.className = 'pose-image';
+        this.poseSvg.innerHTML = '';
+        this.poseSvg.appendChild(cachedImg);
 
         // Update breathing indicator
         this.breathingIndicator.className = 'breathing-indicator';
