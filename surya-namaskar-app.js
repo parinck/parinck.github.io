@@ -349,6 +349,20 @@ class SuryaNamaskarApp {
         clearInterval(this.timerInterval);
         this.progressFill.style.width = '100%';
 
+        // Calculate and display actual practice time
+        const totalSeconds = this.poseDuration * POSES.length;
+        const statTime = document.getElementById('stat-time');
+        const statTimeLabel = document.getElementById('stat-time-label');
+
+        if (totalSeconds >= 60) {
+            const minutes = Math.round(totalSeconds / 60 * 10) / 10; // Round to 1 decimal
+            statTime.textContent = minutes % 1 === 0 ? minutes.toFixed(0) : minutes.toFixed(1);
+            statTimeLabel.textContent = minutes === 1 ? 'Minute' : 'Minutes';
+        } else {
+            statTime.textContent = totalSeconds;
+            statTimeLabel.textContent = totalSeconds === 1 ? 'Second' : 'Seconds';
+        }
+
         // Play completion sound
         setTimeout(() => this.playBeep(523, 200), 0);
         setTimeout(() => this.playBeep(659, 200), 200);
