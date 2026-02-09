@@ -1,4 +1,4 @@
-// Surya Namaskar App - Main JavaScript
+// Surya Namaskar App
 class SuryaNamaskarApp {
     constructor() {
         this.currentPose = 0;
