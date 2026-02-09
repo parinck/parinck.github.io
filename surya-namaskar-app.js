@@ -2,12 +2,15 @@
 class SuryaNamaskarApp {
     constructor() {
         this.currentPose = 0;
+        this.currentSet = 1; // Current set number (1-indexed)
+        this.totalSets = 1; // Total number of sets to complete
         this.poseDuration = 15; // Default 15 seconds per pose
         this.timeRemaining = 15;
         this.timerInterval = null;
         this.isPaused = false;
         this.audioContext = null;
         this.imageCache = new Map(); // Cache for preloaded images
+        this.wakeLock = null; // Wake Lock to prevent screen from sleeping
 
         this.initElements();
         this.loadPreferences(); // Load saved preferences from localStorage
@@ -75,6 +78,9 @@ class SuryaNamaskarApp {
         this.poseDescription = document.getElementById('pose-description');
         this.poseSvg = document.getElementById('pose-svg');
         this.breathingIndicator = document.getElementById('breathing-indicator');
+        this.setIndicator = document.getElementById('set-indicator');
+        this.currentSetDisplay = document.getElementById('current-set');
+        this.totalSetsDisplay = document.getElementById('total-sets');
 
         // Timer elements
         this.timerSeconds = document.getElementById('timer-seconds');
@@ -87,6 +93,12 @@ class SuryaNamaskarApp {
         this.timeDecrease = document.getElementById('time-decrease');
         this.timeIncrease = document.getElementById('time-increase');
         this.presetBtns = document.querySelectorAll('.preset-btn');
+
+        // Sets configuration elements
+        this.setsValue = document.getElementById('sets-value');
+        this.setsDecrease = document.getElementById('sets-decrease');
+        this.setsIncrease = document.getElementById('sets-increase');
+        this.setsPresetBtns = document.querySelectorAll('.sets-preset-btn');
 
         // Settings modal elements
         this.settingsBtn = document.getElementById('settings-btn');
@@ -160,6 +172,17 @@ class SuryaNamaskarApp {
             });
         });
 
+        // Sets configuration events
+        this.setsDecrease.addEventListener('click', () => this.adjustSets(-1));
+        this.setsIncrease.addEventListener('click', () => this.adjustSets(1));
+
+        this.setsPresetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const sets = parseInt(btn.dataset.sets);
+                this.setTotalSets(sets);
+            });
+        });
+
         // Settings modal events
         this.settingsBtn.addEventListener('click', () => this.openSettings());
         this.closeSettings.addEventListener('click', () => this.closeSettingsModal());
@@ -178,6 +201,13 @@ class SuryaNamaskarApp {
                 this.audioContext.resume();
             }
         }, { once: true });
+
+        // Handle visibility change - re-acquire wake lock if page becomes visible again
+        document.addEventListener('visibilitychange', async () => {
+            if (this.wakeLock !== null && document.visibilityState === 'visible') {
+                await this.requestWakeLock();
+            }
+        });
     }
 
     adjustTime(delta) {
@@ -195,6 +225,47 @@ class SuryaNamaskarApp {
         });
     }
 
+    adjustSets(delta) {
+        const newSets = Math.max(1, Math.min(10, this.totalSets + delta));
+        this.setTotalSets(newSets);
+    }
+
+    setTotalSets(sets) {
+        this.totalSets = sets;
+        this.setsValue.textContent = sets;
+
+        // Update preset buttons active state
+        this.setsPresetBtns.forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.sets) === sets);
+        });
+    }
+
+    // Wake Lock API to prevent screen from sleeping
+    async requestWakeLock() {
+        try {
+            if ('wakeLock' in navigator) {
+                this.wakeLock = await navigator.wakeLock.request('screen');
+                console.log('✓ Wake Lock activated - screen will stay on');
+                
+                this.wakeLock.addEventListener('release', () => {
+                    console.log('Wake Lock released');
+                });
+            } else {
+                console.log('Wake Lock API not supported on this device');
+            }
+        } catch (err) {
+            console.log(`Wake Lock error: ${err.name}, ${err.message}`);
+        }
+    }
+
+    async releaseWakeLock() {
+        if (this.wakeLock !== null) {
+            await this.wakeLock.release();
+            this.wakeLock = null;
+            console.log('Wake Lock manually released');
+        }
+    }
+
     // LocalStorage methods
     loadPreferences() {
         const savedDuration = localStorage.getItem('suryaNamaskar_poseDuration');
@@ -209,10 +280,23 @@ class SuryaNamaskarApp {
                 btn.classList.toggle('active', parseInt(btn.dataset.time) === duration);
             });
         }
+
+        const savedSets = localStorage.getItem('suryaNamaskar_totalSets');
+        if (savedSets) {
+            const sets = parseInt(savedSets);
+            this.totalSets = sets;
+            this.setsValue.textContent = sets;
+
+            // Update preset buttons
+            this.setsPresetBtns.forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.sets) === sets);
+            });
+        }
     }
 
     savePreferences() {
         localStorage.setItem('suryaNamaskar_poseDuration', this.poseDuration.toString());
+        localStorage.setItem('suryaNamaskar_totalSets', this.totalSets.toString());
     }
 
     // Settings modal methods
@@ -258,11 +342,24 @@ class SuryaNamaskarApp {
         screen.classList.add('active');
     }
 
-    startPractice() {
+    async startPractice() {
         this.currentPose = 0;
+        this.currentSet = 1;
+        await this.requestWakeLock(); // Prevent screen from sleeping
         this.showScreen(this.practiceScreen);
+        this.updateSetIndicator();
         this.loadPose();
         this.startTimer();
+    }
+
+    updateSetIndicator() {
+        if (this.totalSets > 1) {
+            this.setIndicator.style.display = 'flex';
+            this.currentSetDisplay.textContent = this.currentSet;
+            this.totalSetsDisplay.textContent = this.totalSets;
+        } else {
+            this.setIndicator.style.display = 'none';
+        }
     }
 
     loadPose() {
@@ -351,8 +448,26 @@ class SuryaNamaskarApp {
             this.loadPose();
             this.startTimer();
         } else {
-            this.completePractice();
+            // Check if there are more sets to complete
+            if (this.currentSet < this.totalSets) {
+                this.currentSet++;
+                this.currentPose = 0;
+                this.updateSetIndicator();
+                this.loadPose();
+                this.startTimer();
+                // Play a special sound for new set
+                this.playSetCompleteSound();
+            } else {
+                this.completePractice();
+            }
         }
+    }
+
+    playSetCompleteSound() {
+        // Play ascending tones to indicate new set
+        setTimeout(() => this.playBeep(440, 150), 0);
+        setTimeout(() => this.playBeep(550, 150), 150);
+        setTimeout(() => this.playBeep(660, 200), 300);
     }
 
     togglePause() {
@@ -375,24 +490,41 @@ class SuryaNamaskarApp {
         this.nextPose();
     }
 
-    restartPractice() {
+    async restartPractice() {
         clearInterval(this.timerInterval);
         this.currentPose = 0;
+        this.currentSet = 1;
         this.timeRemaining = this.poseDuration;
         this.isPaused = false;
+        await this.requestWakeLock(); // Ensure wake lock is active
         this.showScreen(this.practiceScreen);
+        this.updateSetIndicator();
         this.loadPose();
         this.startTimer();
     }
 
-    completePractice() {
+    async completePractice() {
         clearInterval(this.timerInterval);
+        await this.releaseWakeLock(); // Release wake lock when practice is complete
         this.progressFill.style.width = '100%';
 
-        // Calculate and display actual practice time
-        const totalSeconds = this.poseDuration * POSES.length;
+        // Calculate and display actual practice time (including all sets)
+        const totalSeconds = this.poseDuration * POSES.length * this.totalSets;
+        const totalPoses = POSES.length * this.totalSets;
         const statTime = document.getElementById('stat-time');
         const statTimeLabel = document.getElementById('stat-time-label');
+        const statPoses = document.getElementById('stat-poses');
+        const statSets = document.getElementById('stat-sets');
+        const statSetsLabel = document.getElementById('stat-sets-label');
+
+        // Update poses count
+        statPoses.textContent = totalPoses;
+
+        // Update sets count
+        if (statSets && statSetsLabel) {
+            statSets.textContent = this.totalSets;
+            statSetsLabel.textContent = this.totalSets === 1 ? 'Set' : 'Sets';
+        }
 
         if (totalSeconds >= 60) {
             const minutes = Math.round(totalSeconds / 60 * 10) / 10; // Round to 1 decimal

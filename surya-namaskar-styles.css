@@ -1096,3 +1096,81 @@ body {
     width: 100%;
     justify-content: center;
 }
+
+/* Set Indicator Styles */
+.set-indicator {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.set-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 107, 107, 0.2));
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-secondary);
+    animation: setGlow 2s ease-in-out infinite alternate;
+}
+
+.set-badge svg {
+    color: var(--color-secondary);
+}
+
+@keyframes setGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
+    }
+
+    100% {
+        box-shadow: 0 0 20px rgba(255, 140, 0, 0.4);
+    }
+}
+
+/* Setting Item Styles */
+.setting-item+.setting-item {
+    margin-top: 1.5rem;
+}
+
+.setting-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Update completion stats for 3 columns */
+.completion-stats {
+    gap: 2rem;
+}
+
+/* Sets preset buttons - match time presets styling */
+.sets-preset-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sets-preset-btn:hover {
+    border-color: rgba(255, 140, 66, 0.5);
+    color: var(--text-primary);
+}
+
+.sets-preset-btn.active {
+    background: var(--gradient-warm);
+    border-color: transparent;
+    color: #1a1a2e;
+    font-weight: 600;
+}

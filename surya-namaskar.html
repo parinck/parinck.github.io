@@ -132,6 +132,16 @@
             <!-- Practice Screen -->
             <div id="practice-screen" class="screen">
                 <div class="practice-container">
+                    <!-- Set Indicator -->
+                    <div id="set-indicator" class="set-indicator" style="display: none;">
+                        <span class="set-badge">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                            </svg>
+                            Set <span id="current-set">1</span> of <span id="total-sets">1</span>
+                        </span>
+                    </div>
+
                     <!-- Progress Bar -->
                     <div class="progress-container">
                         <div class="progress-bar">
@@ -229,6 +239,10 @@
                         practice.</p>
                     <div class="completion-stats">
                         <div class="stat">
+                            <span id="stat-sets" class="stat-value">1</span>
+                            <span id="stat-sets-label" class="stat-label">Set</span>
+                        </div>
+                        <div class="stat">
                             <span id="stat-poses" class="stat-value">12</span>
                             <span class="stat-label">Poses</span>
                         </div>
@@ -281,6 +295,25 @@
                             <button type="button" class="preset-btn active" data-time="15">15s</button>
                             <button type="button" class="preset-btn" data-time="30">30s</button>
                             <button type="button" class="preset-btn" data-time="60">60s</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <label>Number of sets</label>
+                        <p class="setting-hint">Complete multiple rounds of the full sequence</p>
+                        <div class="time-selector">
+                            <button type="button" class="time-btn minus" id="sets-decrease">−</button>
+                            <div class="time-display">
+                                <span id="sets-value">1</span>
+                                <span class="time-unit">sets</span>
+                            </div>
+                            <button type="button" class="time-btn plus" id="sets-increase">+</button>
+                        </div>
+                        <div class="time-presets">
+                            <button type="button" class="sets-preset-btn active" data-sets="1">1</button>
+                            <button type="button" class="sets-preset-btn" data-sets="3">3</button>
+                            <button type="button" class="sets-preset-btn" data-sets="5">5</button>
+                            <button type="button" class="sets-preset-btn" data-sets="7">7</button>
                         </div>
                     </div>
                 </div>
