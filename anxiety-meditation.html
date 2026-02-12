@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Deep Sleep and Anxiety Relief through guided Yoga Nidra, breathing exercises, and calming stretches. Practice Sleep Stretches, Anxiety Busting Protocol, and Home Sudarshan Kriya.">
+    <title>Deep Sleep & Anxiety Relief — Yog Nidra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="anxiety-meditation-styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Animated Background -->
+        <div class="background-animation">
+            <div class="stars"></div>
+            <div class="floating-particles"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="moon-icon" viewBox="0 0 60 60" width="40" height="40">
+                        <defs>
+                            <linearGradient id="moonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#7B68EE" />
+                                <stop offset="100%" style="stop-color:#4ECDC4" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="30" cy="30" r="20" fill="url(#moonGradient)" opacity="0.9" />
+                        <circle cx="38" cy="24" r="16" fill="#0a0a1e" />
+                        <!-- Stars around moon -->
+                        <circle cx="12" cy="15" r="1.5" fill="url(#moonGradient)" opacity="0.7" />
+                        <circle cx="48" cy="42" r="1" fill="url(#moonGradient)" opacity="0.5" />
+                        <circle cx="8" cy="40" r="1" fill="url(#moonGradient)" opacity="0.6" />
+                        <circle cx="50" cy="12" r="1.5" fill="url(#moonGradient)" opacity="0.4" />
+                    </svg>
+                    <h1>Yog Nidra</h1>
+                </div>
+                <button id="settings-btn" class="settings-btn" aria-label="Settings">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                    </svg>
+                </button>
+            </div>
+            <p class="subtitle">Deep Sleep & Anxiety Relief</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Screen -->
+            <div id="home-screen" class="screen home-screen active">
+                <div class="welcome-card glass-card">
+                    <h2>Choose Your Practice</h2>
+                    <p>Select a guided program to calm your mind and prepare for restful sleep.</p>
+
+                    <div class="program-cards" id="program-cards">
+                        <div class="program-card" data-program="sleep-stretches">
+                            <span class="program-emoji">🧎</span>
+                            <div class="program-info">
+                                <h3>Sleep Stretches</h3>
+                                <p>7 calming yoga poses to release tension and prepare for deep sleep</p>
+                            </div>
+                            <svg class="program-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </div>
+                        <div class="program-card" data-program="anxiety-protocol">
+                            <span class="program-emoji">💆</span>
+                            <div class="program-info">
+                                <h3>Anxiety Busting Protocol</h3>
+                                <p>Breathing exercises, chanting & Yoga Nidra for anxiety relief</p>
+                            </div>
+                            <svg class="program-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </div>
+                        <div class="program-card" data-program="home-kriya">
+                            <span class="program-emoji">🧘</span>
+                            <div class="program-info">
+                                <h3>Home Sudarshan Kriya</h3>
+                                <p>Bhastrika, OM chanting & breath cycles for deep restoration</p>
+                            </div>
+                            <svg class="program-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Screen -->
+            <div id="practice-screen" class="screen">
+                <div class="practice-container">
+                    <!-- Back Button -->
+                    <button id="back-btn" class="back-btn">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        <span>Back to Programs</span>
+                    </button>
+
+                    <!-- Program Badge -->
+                    <div class="program-badge">
+                        <span id="program-badge-text" class="badge-text">Sleep Stretches</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <div class="progress-dots" id="progress-dots"></div>
+                    </div>
+
+                    <!-- Pose Display -->
+                    <div class="pose-card glass-card">
+                        <div class="pose-header">
+                            <span id="pose-number" class="pose-number">1</span>
+                            <div class="pose-info">
+                                <h2 id="pose-name" class="pose-name">Hastapadasana</h2>
+                                <p id="pose-subtitle" class="pose-subtitle">Forward Bend</p>
+                            </div>
+                            <div id="breathing-indicator" class="breathing-indicator inhale">
+                                <span class="breath-text">INHALE</span>
+                                <div class="breath-animation"></div>
+                            </div>
+                        </div>
+
+                        <!-- Sanskrit Name -->
+                        <p id="sanskrit-name" class="sanskrit-name"></p>
+
+                        <!-- Pose Illustration -->
+                        <div class="pose-animation-container">
+                            <div id="breath-visual" class="breath-visual"></div>
+                            <div id="pose-svg" class="pose-svg"></div>
+                        </div>
+
+                        <!-- Repetitions Badge -->
+                        <div id="repetitions-container" style="text-align: center; display: none;">
+                            <span id="repetitions-badge" class="repetitions-badge">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                </svg>
+                                <span id="repetitions-text"></span>
+                            </span>
+                        </div>
+
+                        <!-- Sub Steps (for Yoga Nidra) -->
+                        <ul id="sub-steps" class="sub-steps" style="display: none;"></ul>
+
+                        <!-- Timer -->
+                        <div class="timer-container">
+                            <svg class="timer-ring" viewBox="0 0 120 120">
+                                <circle class="timer-bg" cx="60" cy="60" r="54" />
+                                <circle id="timer-progress" class="timer-progress" cx="60" cy="60" r="54" />
+                            </svg>
+                            <div class="timer-display">
+                                <span id="timer-seconds" class="timer-seconds">60</span>
+                                <span class="timer-label">seconds</span>
+                            </div>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="pose-instructions">
+                            <p id="pose-description" class="description-text"></p>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="controls">
+                        <button id="pause-btn" class="control-btn">
+                            <svg id="pause-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                                <rect x="6" y="4" width="4" height="16" />
+                                <rect x="14" y="4" width="4" height="16" />
+                            </svg>
+                            <svg id="play-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor"
+                                style="display: none;">
+                                <polygon points="5 3 19 12 5 21 5 3" />
+                            </svg>
+                        </button>
+                        <button id="skip-btn" class="control-btn secondary">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <polygon points="5 4 15 12 5 20 5 4" />
+                                <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                        </button>
+                        <button id="restart-btn" class="control-btn secondary">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="1 4 1 10 7 10" />
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Screen -->
+            <div id="complete-screen" class="screen">
+                <div class="completion-card glass-card">
+                    <div class="celebration-icon">
+                        <svg viewBox="0 0 120 120" width="120" height="120">
+                            <defs>
+                                <linearGradient id="celebrateGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#7B68EE" />
+                                    <stop offset="50%" style="stop-color:#4ECDC4" />
+                                    <stop offset="100%" style="stop-color:#E8A87C" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="url(#celebrateGradient)" stroke-width="4"
+                                class="celebrate-ring" />
+                            <path d="M40 60 L55 75 L85 45" stroke="url(#celebrateGradient)" stroke-width="6" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round" class="checkmark" />
+                        </svg>
+                    </div>
+                    <h2>Shanti 🙏</h2>
+                    <p id="completion-message">You have completed your practice. Peace flows through you. Rest well
+                        tonight.</p>
+                    <div class="completion-stats">
+                        <div class="stat">
+                            <span id="stat-steps" class="stat-value">7</span>
+                            <span id="stat-steps-label" class="stat-label">Steps</span>
+                        </div>
+                        <div class="stat">
+                            <span id="stat-time" class="stat-value">7</span>
+                            <span id="stat-time-label" class="stat-label">Minutes</span>
+                        </div>
+                    </div>
+                    <button id="home-btn" class="primary-btn" style="margin-bottom: 0.75rem;">
+                        <span>Choose Another Program</span>
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                    </button>
+                    <button id="repeat-btn" class="primary-btn"
+                        style="background: rgba(255,255,255,0.1); box-shadow: none;">
+                        <span>Repeat Practice</span>
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="1 4 1 10 7 10" />
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal-overlay">
+            <div class="modal-content glass-card">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button id="close-settings" class="close-btn" aria-label="Close">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-item">
+                        <label>Time per step (multiplier)</label>
+                        <p class="setting-hint">Adjusts default duration for each step</p>
+                        <div class="time-selector">
+                            <button type="button" class="time-btn minus" id="time-decrease">−</button>
+                            <div class="time-display">
+                                <span id="time-value">1.0</span>
+                                <span class="time-unit">×</span>
+                            </div>
+                            <button type="button" class="time-btn plus" id="time-increase">+</button>
+                        </div>
+                        <div class="time-presets">
+                            <button type="button" class="preset-btn" data-multiplier="0.5">0.5×</button>
+                            <button type="button" class="preset-btn active" data-multiplier="1">1×</button>
+                            <button type="button" class="preset-btn" data-multiplier="1.5">1.5×</button>
+                            <button type="button" class="preset-btn" data-multiplier="2">2×</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="save-settings" class="primary-btn">
+                        <span>Save Settings</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="anxiety-meditation-data.js"></script>
+    <script src="anxiety-meditation-app.js"></script>
+</body>
+
+</html>
