@@ -1,4 +1,4 @@
-// Surya Namaskar App
+// Surya Namaskar App - Main JavaScript
 class SuryaNamaskarApp {
     constructor() {
         this.currentPose = 0;
@@ -11,6 +11,7 @@ class SuryaNamaskarApp {
         this.audioContext = null;
         this.imageCache = new Map(); // Cache for preloaded images
         this.wakeLock = null; // Wake Lock to prevent screen from sleeping
+        this.breathingSoundNodes = []; // Track active breathing sound oscillators
 
         this.initElements();
         this.loadPreferences(); // Load saved preferences from localStorage
@@ -78,6 +79,7 @@ class SuryaNamaskarApp {
         this.poseDescription = document.getElementById('pose-description');
         this.poseSvg = document.getElementById('pose-svg');
         this.breathingIndicator = document.getElementById('breathing-indicator');
+        this.breathVisual = document.getElementById('breath-visual');
         this.setIndicator = document.getElementById('set-indicator');
         this.currentSetDisplay = document.getElementById('current-set');
         this.totalSetsDisplay = document.getElementById('total-sets');
@@ -152,6 +154,207 @@ class SuryaNamaskarApp {
     playFinalBeep() {
         // Lower pitched longer beep for pose change
         this.playBeep(600, 300, 'square');
+    }
+
+    /**
+     * Stop any currently playing breathing sounds gracefully.
+     */
+    stopBreathingSound() {
+        const now = this.audioContext ? this.audioContext.currentTime : 0;
+        this.breathingSoundNodes.forEach(({ gain, oscillator }) => {
+            try {
+                gain.gain.cancelScheduledValues(now);
+                gain.gain.setValueAtTime(gain.gain.value, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                oscillator.stop(now + 0.35);
+            } catch (e) { /* already stopped */ }
+        });
+        this.breathingSoundNodes = [];
+    }
+
+    /**
+     * Play a singing bowl style breathing cue.
+     * @param {'INHALE'|'EXHALE'|'HOLD'|'START'} type - Breathing type
+     */
+    playBreathingSound(type) {
+        if (!this.audioContext) return;
+
+        try {
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+
+            // Stop previous breathing sound
+            this.stopBreathingSound();
+
+            const ctx = this.audioContext;
+            const now = ctx.currentTime;
+            const duration = 3; // 3 seconds
+
+            if (type === 'INHALE') {
+                this._playSingingBowlInhale(ctx, now, duration);
+            } else if (type === 'EXHALE') {
+                this._playSingingBowlExhale(ctx, now, duration);
+            } else if (type === 'HOLD') {
+                this._playSingingBowlHold(ctx, now, duration);
+            } else {
+                // START - gentle singing bowl strike
+                this._playSingingBowlStart(ctx, now, duration);
+            }
+        } catch (e) {
+            console.log('Breathing sound error:', e);
+        }
+    }
+
+    /**
+     * Inhale: Warm rising harmonics - like a singing bowl being circled.
+     * Two layered tones rising in pitch with gentle volume swell.
+     */
+    _playSingingBowlInhale(ctx, now, duration) {
+        const layers = [
+            { startFreq: 220, endFreq: 330, type: 'sine', vol: 0.12 },
+            { startFreq: 440, endFreq: 660, type: 'sine', vol: 0.06 },
+            { startFreq: 330, endFreq: 495, type: 'triangle', vol: 0.04 },
+        ];
+
+        layers.forEach(layer => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = layer.type;
+            osc.frequency.setValueAtTime(layer.startFreq, now);
+            osc.frequency.exponentialRampToValueAtTime(layer.endFreq, now + duration);
+
+            // Volume swells gently upward
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.exponentialRampToValueAtTime(layer.vol, now + duration * 0.6);
+            gain.gain.exponentialRampToValueAtTime(layer.vol * 0.5, now + duration);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + duration + 0.1);
+
+            this.breathingSoundNodes.push({ oscillator: osc, gain });
+        });
+    }
+
+    /**
+     * Exhale: Warm descending harmonics - like a singing bowl fading.
+     * Tones descend in pitch with natural volume decay.
+     */
+    _playSingingBowlExhale(ctx, now, duration) {
+        const layers = [
+            { startFreq: 330, endFreq: 220, type: 'sine', vol: 0.12 },
+            { startFreq: 660, endFreq: 440, type: 'sine', vol: 0.06 },
+            { startFreq: 495, endFreq: 330, type: 'triangle', vol: 0.04 },
+        ];
+
+        layers.forEach(layer => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = layer.type;
+            osc.frequency.setValueAtTime(layer.startFreq, now);
+            osc.frequency.exponentialRampToValueAtTime(layer.endFreq, now + duration);
+
+            // Volume starts present and fades out
+            gain.gain.setValueAtTime(layer.vol, now);
+            gain.gain.exponentialRampToValueAtTime(layer.vol * 0.7, now + duration * 0.4);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + duration + 0.1);
+
+            this.breathingSoundNodes.push({ oscillator: osc, gain });
+        });
+    }
+
+    /**
+     * Hold: Sustained resonant hum - like a singing bowl ringing steady.
+     * Soft, steady tone with gentle pulsing.
+     */
+    _playSingingBowlHold(ctx, now, duration) {
+        const layers = [
+            { freq: 264, type: 'sine', vol: 0.08 },
+            { freq: 528, type: 'sine', vol: 0.03 },
+        ];
+
+        layers.forEach(layer => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = layer.type;
+            osc.frequency.setValueAtTime(layer.freq, now);
+
+            // Gentle fade in, sustain, gentle fade out
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.exponentialRampToValueAtTime(layer.vol, now + 0.5);
+            gain.gain.setValueAtTime(layer.vol, now + duration - 0.8);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + duration + 0.1);
+
+            this.breathingSoundNodes.push({ oscillator: osc, gain });
+        });
+
+        // Add subtle LFO tremolo for "alive" feel
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(3, now); // 3 Hz pulse
+        lfoGain.gain.setValueAtTime(0.02, now);
+        lfo.connect(lfoGain);
+        lfoGain.connect(ctx.destination);
+        lfo.start(now);
+        lfo.stop(now + duration + 0.1);
+        this.breathingSoundNodes.push({ oscillator: lfo, gain: lfoGain });
+    }
+
+    /**
+     * Start: Single gentle singing bowl strike.
+     */
+    _playSingingBowlStart(ctx, now, duration) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(396, now); // Solfeggio frequency - liberation
+
+        // Sharp attack, long warm decay like a bowl being struck
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(0.15, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.08, now + 0.3);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + duration + 0.1);
+
+        this.breathingSoundNodes.push({ oscillator: osc, gain });
+
+        // Add harmonic overtone
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(792, now); // Octave above
+
+        gain2.gain.setValueAtTime(0.001, now);
+        gain2.gain.exponentialRampToValueAtTime(0.06, now + 0.05);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + duration * 0.7);
+
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now);
+        osc2.stop(now + duration + 0.1);
+
+        this.breathingSoundNodes.push({ oscillator: osc2, gain: gain2 });
     }
 
     bindEvents() {
@@ -246,7 +449,7 @@ class SuryaNamaskarApp {
             if ('wakeLock' in navigator) {
                 this.wakeLock = await navigator.wakeLock.request('screen');
                 console.log('✓ Wake Lock activated - screen will stay on');
-                
+
                 this.wakeLock.addEventListener('release', () => {
                     console.log('Wake Lock released');
                 });
@@ -387,7 +590,20 @@ class SuryaNamaskarApp {
         } else {
             this.breathingIndicator.classList.add('hold');
         }
+        
+        // Update breath visual (large indicator)
+        this.breathVisual.className = 'breath-visual';
+        if (pose.breathing === 'INHALE') {
+            this.breathVisual.classList.add('inhale');
+        } else if (pose.breathing === 'EXHALE') {
+            this.breathVisual.classList.add('exhale');
+        } else {
+            this.breathVisual.classList.add('hold');
+        }
         this.breathingIndicator.querySelector('.breath-text').textContent = pose.breathing;
+
+        // Play breathing sound cue
+        this.playBreathingSound(pose.breathing);
 
         // Update progress
         this.updateProgressDots();

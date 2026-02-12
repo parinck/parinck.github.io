@@ -578,10 +578,11 @@ body {
 }
 
 .breath-text {
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     letter-spacing: 0.1em;
     margin-bottom: 0.25rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .breathing-indicator.inhale .breath-text {
@@ -695,6 +696,56 @@ body {
     align-items: center;
     min-height: 260px;
     margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.breath-visual {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(20px);
+    transition: all 0.5s ease;
+    opacity: 0;
+}
+
+.breath-visual.inhale {
+    background: radial-gradient(circle, rgba(78, 205, 196, 0.4) 0%, rgba(78, 205, 196, 0.1) 60%, transparent 80%);
+    animation: bigInhale 4s ease-in-out infinite;
+    opacity: 1;
+}
+
+.breath-visual.exhale {
+    background: radial-gradient(circle, rgba(255, 107, 107, 0.4) 0%, rgba(255, 107, 107, 0.1) 60%, transparent 80%);
+    animation: bigExhale 4s ease-in-out infinite;
+    opacity: 1;
+}
+
+.breath-visual.hold {
+    background: radial-gradient(circle, rgba(255, 230, 109, 0.4) 0%, rgba(255, 230, 109, 0.1) 60%, transparent 80%);
+    animation: bigHold 4s ease-in-out infinite;
+    opacity: 1;
+}
+
+@keyframes bigInhale {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+    50% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
+}
+
+@keyframes bigExhale {
+    0% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+}
+
+@keyframes bigHold {
+    0%, 100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
 }
 
 .pose-svg {
@@ -707,6 +758,9 @@ body {
     overflow: hidden;
     border-radius: var(--radius-lg);
     background: rgba(255, 255, 255, 0.03);
+    position: relative;
+    z-index: 2;
+    backdrop-filter: blur(5px);
 }
 
 .pose-svg svg {
