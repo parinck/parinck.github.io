@@ -97,3 +97,6 @@ const POSES = [
         image: "images/pose_12.png"
     }
 ];
+
+// CJS export for Node.js tests (ignored in browsers)
+if (typeof module !== 'undefined') module.exports = { POSES };

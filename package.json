@@ -1,0 +1,12 @@
+{
+  "name": "yoga-surya-namaskar",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "cucumber-js"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.6.0",
+    "jsdom": "^24.1.3"
+  }
+}

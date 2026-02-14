@@ -590,7 +590,7 @@ class SuryaNamaskarApp {
         } else {
             this.breathingIndicator.classList.add('hold');
         }
-        
+
         // Update breath visual (large indicator)
         this.breathVisual.className = 'breath-visual';
         if (pose.breathing === 'INHALE') {
@@ -667,7 +667,9 @@ class SuryaNamaskarApp {
             // Check if there are more sets to complete
             if (this.currentSet < this.totalSets) {
                 this.currentSet++;
-                this.currentPose = 0;
+                // Skip pose 0 (step 1 - Pranamasana) since it's the same as
+                // step 12 (Pranamasana). Sequence: ...12 → 2 → 3...
+                this.currentPose = 1;
                 this.updateSetIndicator();
                 this.loadPose();
                 this.startTimer();
@@ -725,8 +727,9 @@ class SuryaNamaskarApp {
         this.progressFill.style.width = '100%';
 
         // Calculate and display actual practice time (including all sets)
-        const totalSeconds = this.poseDuration * POSES.length * this.totalSets;
-        const totalPoses = POSES.length * this.totalSets;
+        // First set has all 12 poses, subsequent sets have 11 (step 1 is skipped)
+        const totalPoses = POSES.length + (this.totalSets - 1) * (POSES.length - 1);
+        const totalSeconds = this.poseDuration * totalPoses;
         const statTime = document.getElementById('stat-time');
         const statTimeLabel = document.getElementById('stat-time-label');
         const statPoses = document.getElementById('stat-poses');

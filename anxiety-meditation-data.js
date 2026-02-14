@@ -231,3 +231,8 @@ const PROGRAMS = [
         color: '#E8A87C'
     }
 ];
+
+// CJS export for Node.js tests (ignored in browsers)
+if (typeof module !== 'undefined') {
+    module.exports = { SLEEP_STRETCHES, ANXIETY_PROTOCOL, HOME_KRIYA, PROGRAMS };
+}
