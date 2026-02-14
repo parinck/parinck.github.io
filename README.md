@@ -6,4 +6,4 @@
 2. [DBF-Glossary-Table](https://parinck.github.io/glossary-table)
 3. [Surya Namaskar](https://parinck.github.io/surya-namaskar.html)
 4. [Yog Nidra](https://parinck.github.io/anxiety-meditation.html)
-4. [SKY](https://parinck.github.io/sky-practice.html)
+5. [SKY](https://parinck.github.io/sky-practice.html)
