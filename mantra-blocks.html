@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mantra Tap</title>
+  <style>
+    :root {
+      --bg: #10130f;
+      --panel: #181d16;
+      --tile: #252c21;
+      --tile-good: #f2c14e;
+      --tile-hit: #54d0b4;
+      --tile-bad: #e35d6a;
+      --text: #fff4d8;
+      --muted: rgba(255, 244, 216, 0.68);
+      --line: rgba(255, 244, 216, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100svh;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Avenir Next", "Noto Sans Devanagari", "Mangal", sans-serif;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(720px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Noto Serif Devanagari", serif;
+      font-size: clamp(2rem, 10vw, 4rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .score {
+      display: flex;
+      gap: 14px;
+      color: var(--muted);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .score strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .mantras {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mantras button,
+    .reset {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      font-weight: 850;
+    }
+
+    .mantras button.active {
+      background: var(--tile-good);
+      color: #17140a;
+      border-color: var(--tile-good);
+    }
+
+    .target {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .target-word {
+      margin: 0 0 12px;
+      font-family: Georgia, "Noto Serif Devanagari", serif;
+      font-size: clamp(2.4rem, 16vw, 6rem);
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .path {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .path span {
+      min-width: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .path span.done {
+      background: var(--tile-hit);
+      color: #071512;
+      border-color: var(--tile-hit);
+    }
+
+    .path span.now {
+      background: var(--tile-good);
+      color: #17140a;
+      border-color: var(--tile-good);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .tile {
+      min-height: clamp(74px, 18vw, 112px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--tile);
+      color: var(--text);
+      font-size: clamp(1.35rem, 7vw, 2.4rem);
+      font-weight: 950;
+      line-height: 1;
+      transition: transform 60ms linear, background 80ms linear, color 80ms linear;
+      user-select: none;
+    }
+
+    .tile:active {
+      transform: scale(0.96);
+    }
+
+    .tile.hit {
+      background: var(--tile-hit);
+      color: #071512;
+    }
+
+    .tile.bad {
+      background: var(--tile-bad);
+      color: #fff;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 750;
+    }
+
+    .reset {
+      padding: 0 14px;
+    }
+
+    @media (max-width: 560px) {
+      .app {
+        padding: 12px;
+      }
+
+      header {
+        align-items: start;
+      }
+
+      .score {
+        gap: 9px;
+        font-size: 0.82rem;
+      }
+
+      .mantras {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid {
+        gap: 7px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Mantra Tap</h1>
+      <div class="score" aria-live="polite">
+        <span>Chants<strong id="chants">0</strong></span>
+        <span>Streak<strong id="streak">0</strong></span>
+      </div>
+    </header>
+
+    <section class="mantras" id="mantras" aria-label="Choose mantra"></section>
+
+    <section class="target" aria-label="Current mantra">
+      <p class="target-word" id="targetWord" lang="hi">राम</p>
+      <div class="path" id="path"></div>
+    </section>
+
+    <section class="grid" id="grid" aria-label="Tap syllables in order"></section>
+
+    <div class="footer">
+      <span id="hint">Tap: रा</span>
+      <button class="reset" id="reset" type="button">Reset</button>
+    </div>
+  </main>
+
+  <script>
+    const MANTRAS = [
+      { name: "राम", units: ["रा", "म"] },
+      { name: "ॐ", units: ["ॐ"] },
+      { name: "ॐ शांति", units: ["ॐ", "शां", "ति"] },
+      { name: "ॐ नमः शिवाय", units: ["ॐ", "न", "मः", "शि", "वा", "य"] },
+      { name: "जय श्री कृष्ण", units: ["जय", "श्री", "कृ", "ष्ण"] },
+      { name: "हरे राम", units: ["ह", "रे", "रा", "म"] }
+    ];
+
+    const DISTRACTORS = ["सी", "ता", "हरि", "गो", "विं", "द", "भक्ति", "प्रेम", "जय", "ॐ"];
+    const gridEl = document.querySelector("#grid");
+    const mantrasEl = document.querySelector("#mantras");
+    const pathEl = document.querySelector("#path");
+    const targetWordEl = document.querySelector("#targetWord");
+    const hintEl = document.querySelector("#hint");
+    const chantsEl = document.querySelector("#chants");
+    const streakEl = document.querySelector("#streak");
+    const resetEl = document.querySelector("#reset");
+
+    let mantraIndex = 0;
+    let step = 0;
+    let chants = 0;
+    let streak = 0;
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function currentMantra() {
+      return MANTRAS[mantraIndex];
+    }
+
+    function drawMantras() {
+      mantrasEl.innerHTML = "";
+      MANTRAS.forEach((mantra, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.lang = "hi";
+        button.textContent = mantra.name;
+        button.className = index === mantraIndex ? "active" : "";
+        button.addEventListener("click", () => {
+          mantraIndex = index;
+          step = 0;
+          draw();
+        });
+        mantrasEl.appendChild(button);
+      });
+    }
+
+    function drawPath() {
+      pathEl.innerHTML = "";
+      currentMantra().units.forEach((unit, index) => {
+        const part = document.createElement("span");
+        part.lang = "hi";
+        part.textContent = unit;
+        if (index < step) part.className = "done";
+        if (index === step) part.className = "now";
+        pathEl.appendChild(part);
+      });
+    }
+
+    function makeTiles() {
+      const units = currentMantra().units;
+      const needed = [...units, ...units];
+      const pool = [...needed];
+      while (pool.length < 16) {
+        pool.push(DISTRACTORS[Math.floor(Math.random() * DISTRACTORS.length)]);
+      }
+      return shuffle(pool).slice(0, 16);
+    }
+
+    function drawGrid() {
+      gridEl.innerHTML = "";
+      makeTiles().forEach((unit, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "tile";
+        button.lang = "hi";
+        button.textContent = unit;
+        button.dataset.unit = unit;
+        button.dataset.key = String(index + 1);
+        button.addEventListener("click", () => tap(button));
+        gridEl.appendChild(button);
+      });
+    }
+
+    function tap(tile) {
+      const expected = currentMantra().units[step];
+      if (tile.dataset.unit !== expected) {
+        streak = 0;
+        tile.classList.add("bad");
+        window.setTimeout(() => tile.classList.remove("bad"), 90);
+        updateScore();
+        return;
+      }
+
+      tile.classList.add("hit");
+      step += 1;
+      if (step >= currentMantra().units.length) {
+        chants += 1;
+        streak += 1;
+        step = 0;
+        updateScore();
+        window.setTimeout(draw, 80);
+      } else {
+        drawPath();
+        updateHint();
+      }
+    }
+
+    function updateHint() {
+      hintEl.textContent = `Tap: ${currentMantra().units[step]}`;
+    }
+
+    function updateScore() {
+      chantsEl.textContent = chants;
+      streakEl.textContent = streak;
+    }
+
+    function draw() {
+      targetWordEl.textContent = currentMantra().name;
+      drawMantras();
+      drawPath();
+      drawGrid();
+      updateHint();
+      updateScore();
+    }
+
+    resetEl.addEventListener("click", () => {
+      step = 0;
+      chants = 0;
+      streak = 0;
+      draw();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      const keys = "1234567890qwerty";
+      const index = keys.indexOf(key);
+      if (index >= 0) {
+        const tile = gridEl.children[index];
+        if (tile) tap(tile);
+      }
+    });
+
+    draw();
+  </script>
+</body>
+</html>
