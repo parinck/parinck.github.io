@@ -12,3 +12,5 @@
 
 ## Game 
 1. [Mantra Block](https://parinck.github.io/mantra-blocks.html)
+2. [Mala Bubble](https://parinck.github.io/mala-bubble.html)
+3. [Connect Word](https://parinck.github.io/connect-word.html)
