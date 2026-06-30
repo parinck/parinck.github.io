@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mala Bubble</title>
+  <link rel="stylesheet" href="mantra-games.css">
+</head>
+<body>
+  <main class="app" data-app data-game="mala-bubble" data-mode="river">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" lang="hi">राम</div>
+        <div>
+          <h1>Mala Bubble</h1>
+          <p class="target-line"><span>Catch only</span><span class="target-pill" id="targetText" lang="hi">राम</span></p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-button" type="button" data-reset aria-label="Reset">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+            <path d="M3 4v6h6"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="layout bubble-shell">
+      <section class="stage bubble-stage" id="stage" aria-label="Mala Bubble game">
+        <div class="river-stage" id="riverStage" style="--calm: 42">
+          <svg class="river-art" viewBox="0 0 430 780" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M70 0C125 92 45 145 132 238C218 330 92 410 192 525C262 604 223 688 304 780"></path>
+            <path d="M235 0C294 95 194 160 290 254C374 337 252 430 350 542C410 612 378 704 426 780"></path>
+          </svg>
+        </div>
+
+        <div class="burst-layer" id="burstLayer" aria-hidden="true"></div>
+        <div class="unlock" id="unlock" aria-hidden="true">
+          <div class="unlock-panel">
+            <h2 class="unlock-title">108</h2>
+            <p class="unlock-mantra" lang="hi">राम</p>
+            <button class="reset-button" type="button" data-reset>Restart</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="mala-orbit" aria-label="Mala progress">
+          <div class="mala-beads" id="malaBeads"></div>
+          <div class="mala-center">
+            <div>
+              <div class="mala-count" id="beadMini">0</div>
+              <div class="mala-label">Mala</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat-row"><span>Beads</span><strong id="beadText">0 / 108</strong></div>
+          <div class="meter" aria-hidden="true"><span id="malaFill"></span></div>
+          <div class="stat-row"><span>Mandala</span><strong id="ringText">0 / 4</strong></div>
+          <div class="stat-row"><span>Calm</span><strong id="calmText">42</strong></div>
+          <div class="meter" aria-hidden="true"><span id="calmFill"></span></div>
+          <div class="stat-row"><span>Streak</span><strong id="streakText">0</strong></div>
+        </div>
+
+        <button class="reset-button" type="button" data-reset>Reset</button>
+      </aside>
+    </section>
+  </main>
+
+  <script src="mantra-connect-game.js"></script>
+</body>
+</html>
